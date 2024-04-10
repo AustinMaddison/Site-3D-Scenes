@@ -166,7 +166,6 @@ function render() {
     wireframeMesh.rotation.y += speed; 
 
     camera.visible = true;
-    renderer.setClearColor(0x111111, 1);
-    renderer.setViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    renderer.setClearColor( 0x000000, 0 ); // the default
     renderer.render(scene, camera);
 }
