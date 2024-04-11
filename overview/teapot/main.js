@@ -10,6 +10,10 @@ let camera, scene, renderer;
 let mesh;
 let wireframeMesh;
 
+const myFov = 50;
+const targetAspectRatio = 16/9;
+
+
 const API = {
     color: 0xffffff, // sRGB
     exposure: 1.0
@@ -24,8 +28,8 @@ function init() {
 
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(30, aspect, 0.1, 1000);
-    camera.position.set(0, 0, 100);
+    camera = new THREE.PerspectiveCamera(myFov, aspect, 0.1, 1000);
+    camera.position.z = 100;
     scene.add(camera);
 
     let mesh_pos = { x: 0, y: -20, z: 0 }
@@ -147,11 +151,21 @@ function init() {
 function onWindowResize() {
     SCREEN_WIDTH = window.innerWidth;
     SCREEN_HEIGHT = window.innerHeight;
-    aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
-
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-
+    aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
     camera.aspect = aspect;
+
+
+    if(aspect > targetAspectRatio){
+        const cameraHeight = Math.tan(THREE.MathUtils.degToRad(myFov / 2));
+        const ratio = camera.aspect / targetAspectRatio;
+        const newCameraHeight = cameraHeight / ratio;
+        camera.fov = THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+    }
+     else {
+        camera.fov = myFov
+     }
+
     camera.updateProjectionMatrix();
 }
 
