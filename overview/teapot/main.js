@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
 
 let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
@@ -30,28 +29,17 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(myFov, aspect, 0.1, 1000);
     camera.position.z = 100;
+    camera.position.y = -1.5;
     scene.add(camera);
 
     let mesh_pos = { x: 0, y: -20, z: 0 }
     let mesh_scale = { x: 0.5, y: 0.5, z: 0.5 }
 
-
-    // manager
     const manager = new THREE.LoadingManager( render );
 
-    // matcap
-    const loaderEXR = new EXRLoader( manager );
-    const matcap = loaderEXR.load( '../../public/matcaps/7.exr' );
+    const loader = new THREE.TextureLoader( manager );  
+    const matcap = loader.load( '../../public/matcaps/matcap.png' );
 
-    // normalmap
-    const loader = new THREE.TextureLoader( manager );
-
-    const surfaceMaterial = new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        metalness: 0.2,
-        roughness: 0.6,
-
-    });
 
     const matcapMaterial = new THREE.MeshMatcapMaterial({
         color: new THREE.Color().setHex( API.color ).convertSRGBToLinear(),
@@ -60,10 +48,10 @@ function init() {
 
 
     const wireframeMaterial = new THREE.MeshStandardMaterial({
-        color: 0x9999999,
-        metalness: 0.1,
-        roughness: 0.15,
-        opacity: .2,
+        color: 0x000000,
+        metalness: 1,
+        roughness: 0.1,
+        opacity: .05,
         transparent: true,
         wireframe: true,
 
@@ -123,7 +111,7 @@ function init() {
 
     let light_1 = new THREE.DirectionalLight(0xffffff, 1);
     let light_2 = new THREE.DirectionalLight(0xffffff, 1);
-    let light_3 = new THREE.DirectionalLight(0xffffff, 1);
+    let light_3 = new THREE.DirectionalLight(0xffffff, 10);
     let backlight = new THREE.DirectionalLight(0xffffff, 10);
 
     light_1.position.set(11, 11, 10);
@@ -131,9 +119,9 @@ function init() {
     light_3.position.set(30, 10, -5);
     backlight.position.set(0, 5, -10);
     scene.add(backlight);
-    scene.add(light_1);
+    // scene.add(light_1);
     // scene.add(light_2);
-    // scene.add(light_3);
+    scene.add(light_3);
 
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
