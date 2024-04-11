@@ -10,8 +10,8 @@ let camera, scene, renderer;
 let mesh;
 let wireframeMesh;
 
-const myFov = 30;
-const targetAspectRatio = 16/10;
+const myFov = 70;
+const targetAspectRatio = 16/19;
 
 
 const API = {
@@ -41,7 +41,7 @@ function init() {
 
     // matcap
     const loaderEXR = new EXRLoader( manager );
-    const matcap = loaderEXR.load( '../../public/matcaps/4.exr' );
+    const matcap = loaderEXR.load( '../../public/matcaps/7.exr' );
 
     // normalmap
     const loader = new THREE.TextureLoader( manager );
@@ -115,13 +115,11 @@ function init() {
         wireframeMesh.position.set(position.x, position.y, position.z);
         wireframeMesh.scale.set(scale.x, scale.y, scale.z);
 
-
     }, (xhr) => {
         console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
     }, (error) => {
         console.error(error);
     });  
-
 
     let light_1 = new THREE.DirectionalLight(0xffffff, 1);
     let light_2 = new THREE.DirectionalLight(0xffffff, 1);
@@ -146,6 +144,25 @@ function init() {
     container.appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize);
+
+    SCREEN_WIDTH = window.innerWidth;
+    SCREEN_HEIGHT = window.innerHeight;
+    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+    camera.aspect = aspect;
+
+
+    if(aspect > targetAspectRatio){
+        const cameraHeight = Math.tan(THREE.MathUtils.degToRad(myFov / 2));
+        const ratio = camera.aspect / targetAspectRatio;
+        const newCameraHeight = cameraHeight / ratio;
+        camera.fov = THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
+    }
+     else {
+        camera.fov = myFov
+     }
+
+    camera.updateProjectionMatrix();
 }
 
 function onWindowResize() {
