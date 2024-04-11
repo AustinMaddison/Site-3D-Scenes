@@ -10,8 +10,8 @@ let camera, scene, renderer;
 let mesh;
 let wireframeMesh;
 
-const myFov = 50;
-const targetAspectRatio = 16/9;
+const myFov = 30;
+const targetAspectRatio = 16/10;
 
 
 const API = {
