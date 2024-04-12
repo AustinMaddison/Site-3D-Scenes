@@ -12,6 +12,8 @@ let wireframeMesh;
 const myFov = 70;
 const targetAspectRatio = 16/19;
 
+let isModelLoaded = false;
+
 
 const API = {
     color: 0xffffff, // sRGB
@@ -59,7 +61,6 @@ function init() {
 
 
     new GLTFLoader().load('../../public/models/teapot.gltf', (gltf) => {
-        console.log('loading model');
         mesh = gltf.scene;
 
         mesh.traverse((child) => {
@@ -74,17 +75,10 @@ function init() {
 
         mesh.position.set(mesh_pos.x, mesh_pos.y, mesh_pos.z);
         mesh.scale.set(mesh_scale.x, mesh_scale.y, mesh_scale.z);
-
-
-    }, (xhr) => {
-        console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
-    }, (error) => {
-        console.error(error);
     });
 
 
     new GLTFLoader().load('../../public/models/teapot.gltf', (gltf) => {
-        console.log('loading model');
         wireframeMesh = gltf.scene;
 
         wireframeMesh.traverse((child) => {
@@ -95,6 +89,8 @@ function init() {
                 child.castShadow = false;
                 child.receiveShadow = false;
             }
+            
+            isModelLoaded = true;
         });
 
         scene.add(wireframeMesh);
@@ -103,11 +99,8 @@ function init() {
         wireframeMesh.position.set(position.x, position.y, position.z);
         wireframeMesh.scale.set(scale.x, scale.y, scale.z);
 
-    }, (xhr) => {
-        console.log(`loading ${xhr.loaded / xhr.total * 100}%`);
-    }, (error) => {
-        console.error(error);
     });  
+
 
     let light_1 = new THREE.DirectionalLight(0xffffff, 1);
     let light_2 = new THREE.DirectionalLight(0xffffff, 1);
@@ -180,9 +173,13 @@ function animate() {
 }
 
 function render() {
-    const speed = 0.003;
-    mesh.rotation.y += speed;
-    wireframeMesh.rotation.y += speed; 
+
+    if(isModelLoaded) {
+        const speed = 0.003;
+        mesh.rotation.y += speed;
+        wireframeMesh.rotation.y += speed; 
+    }
+
 
     camera.visible = true;
     renderer.setClearColor( 0x000000, 0 ); // the default
