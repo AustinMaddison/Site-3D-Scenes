@@ -8,11 +8,9 @@ let container;
 let camera, scene, renderer;
 let mesh;
 let wireframeMesh;
-let mouse = new THREE.Vector2();
-
 
 const myFov = 70;
-const targetAspectRatio = 16 / 19;
+const targetAspectRatio = 16/19;
 
 let isModelLoaded = false;
 
@@ -39,14 +37,14 @@ function init() {
     let mesh_pos = { x: 0, y: -20, z: 0 }
     let mesh_scale = { x: 0.5, y: 0.5, z: 0.5 }
 
-    const manager = new THREE.LoadingManager(render);
+    const manager = new THREE.LoadingManager( render );
 
-    const loader = new THREE.TextureLoader(manager);
-    const matcap = loader.load('../../public/matcaps/matcap.png');
+    const loader = new THREE.TextureLoader( manager );  
+    const matcap = loader.load( '../../public/matcaps/matcap.png' );
 
 
     const matcapMaterial = new THREE.MeshMatcapMaterial({
-        color: new THREE.Color().setHex(API.color).convertSRGBToLinear(),
+        color: new THREE.Color().setHex( API.color ).convertSRGBToLinear(),
         matcap: matcap,
     });
 
@@ -91,17 +89,17 @@ function init() {
                 child.castShadow = false;
                 child.receiveShadow = false;
             }
-
+            
             isModelLoaded = true;
         });
 
         scene.add(wireframeMesh);
-        let position = { x: 0, y: -20, z: 0 }
-        let scale = { x: 0.5, y: 0.5, z: 0.5 }
+        let position = {x: 0, y: -20, z: 0}
+        let scale = {x: 0.5, y: 0.5, z: 0.5}
         wireframeMesh.position.set(position.x, position.y, position.z);
         wireframeMesh.scale.set(scale.x, scale.y, scale.z);
 
-    });
+    });  
 
 
     let light_1 = new THREE.DirectionalLight(0xffffff, 1);
@@ -135,25 +133,17 @@ function init() {
     camera.aspect = aspect;
 
 
-    if (aspect > targetAspectRatio) {
+    if(aspect > targetAspectRatio){
         const cameraHeight = Math.tan(THREE.MathUtils.degToRad(myFov / 2));
         const ratio = camera.aspect / targetAspectRatio;
         const newCameraHeight = cameraHeight / ratio;
         camera.fov = THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
     }
-    else {
+     else {
         camera.fov = myFov
-    }
+     }
 
     camera.updateProjectionMatrix();
-
-    // Set up mouse movement
-    var windowHalf = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
-
-    document.addEventListener('mousemove', function (event) {
-        mouse.x = (event.clientX - windowHalf.x) / windowHalf.x;
-        mouse.y = (event.clientY - windowHalf.y) / windowHalf.y;
-    });
 }
 
 function onWindowResize() {
@@ -164,41 +154,34 @@ function onWindowResize() {
     camera.aspect = aspect;
 
 
-    if (aspect > targetAspectRatio) {
+    if(aspect > targetAspectRatio){
         const cameraHeight = Math.tan(THREE.MathUtils.degToRad(myFov / 2));
         const ratio = camera.aspect / targetAspectRatio;
         const newCameraHeight = cameraHeight / ratio;
         camera.fov = THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2;
     }
-    else {
+     else {
         camera.fov = myFov
-    }
+     }
 
     camera.updateProjectionMatrix();
 }
 
 function animate() {
     requestAnimationFrame(animate);
-    // Rotate the camera slightly based on mouse movement
-    console.log('mouse: ' + mouse.x + ', ' + mouse.y);
-    camera.rotation.y = mouse.x * -0.03;
-    camera.rotation.x = mouse.y * -0.03;
-    // camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
-    console.log('camera: ' + camera.rotation.x + ', ' + camera.rotation.y);
-
-
-
-    if (isModelLoaded) {
-        const speed = 0.003;
-        mesh.rotation.y += speed;
-        wireframeMesh.rotation.y += speed;
-    }
-
     render();
 }
 
 function render() {
+
+    if(isModelLoaded) {
+        const speed = 0.003;
+        mesh.rotation.y += speed;
+        wireframeMesh.rotation.y += speed; 
+    }
+
+
     camera.visible = true;
-    renderer.setClearColor(0x000000, 0); // the default
+    renderer.setClearColor( 0x000000, 0 ); // the default
     renderer.render(scene, camera);
 }
