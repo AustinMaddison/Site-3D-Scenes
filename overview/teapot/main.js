@@ -176,8 +176,8 @@ function animate() {
     if (isModelLoaded) {
         const speed = .3;
         let dt = clock.getDelta();
-        rotation_step = speed * dt;
-        mesh.rotation.y += rotation;
+        let rotation_step = speed * dt;
+        mesh.rotation.y += rotation_step;
         wireframeMesh.rotation.y += rotation_step;
     }
 }
