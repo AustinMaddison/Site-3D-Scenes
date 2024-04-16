@@ -203,6 +203,7 @@ function animate() {
 
 function render() {
     camera.visible = true;
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setClearColor(0x000000, 0); // the default
     renderer.render(scene, camera);
 }
