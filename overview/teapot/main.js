@@ -8,6 +8,8 @@ let container;
 let camera, scene, renderer;
 let mesh;
 let wireframeMesh;
+let clock = new THREE.Clock();
+
 
 const myFov = 70;
 const targetAspectRatio = 16/19;
@@ -170,15 +172,18 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
     render();
+
+    if (isModelLoaded) {
+        const speed = .3;
+        let dt = clock.getDelta();
+        rotation_step = speed * dt;
+        mesh.rotation.y += rotation;
+        wireframeMesh.rotation.y += rotation_step;
+    }
 }
 
 function render() {
 
-    if(isModelLoaded) {
-        const speed = 0.003;
-        mesh.rotation.y += speed;
-        wireframeMesh.rotation.y += speed; 
-    }
 
 
     camera.visible = true;
