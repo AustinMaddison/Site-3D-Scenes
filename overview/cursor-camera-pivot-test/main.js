@@ -9,6 +9,8 @@ let camera, scene, renderer;
 let mesh;
 let wireframeMesh;
 let mouse = new THREE.Vector2();
+let clock = new THREE.Clock();
+clock.start();
 
 
 const myFov = 70;
@@ -183,15 +185,17 @@ function animate() {
     console.log('mouse: ' + mouse.x + ', ' + mouse.y);
     camera.rotation.y = mouse.x * -0.03;
     camera.rotation.x = mouse.y * -0.03;
+
     // camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
     console.log('camera: ' + camera.rotation.x + ', ' + camera.rotation.y);
 
 
 
     if (isModelLoaded) {
-        const speed = 0.003;
-        mesh.rotation.y += speed;
-        wireframeMesh.rotation.y += speed;
+        const speed = .6;
+        let dt = clock.getDelta();
+        mesh.rotation.y += speed * dt;
+        wireframeMesh.rotation.y += speed * dt;
     }
 
     render();
